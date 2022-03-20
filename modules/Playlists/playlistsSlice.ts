@@ -35,8 +35,8 @@ export const playlistSelectors = {
   getSelectedPlaylist: (state: RootState) => {
     const selectedPlaylistId = state.playlists.selectedPlaylistId;
 
-    return state.playlists.items.find((p) => p.id === selectedPlaylistId)
-  }
+    return state.playlists.items.find((p) => p.id === selectedPlaylistId);
+  },
 };
 
 // Action creators are generated for each case reducer function
