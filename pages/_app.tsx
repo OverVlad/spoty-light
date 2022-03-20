@@ -1,6 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Container } from '@chakra-ui/react';
 import Head from 'next/head';
 import { Header } from '../components/Header/Header';
 
@@ -15,7 +15,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
       <ChakraProvider>
         <Header />
-        <Component {...pageProps} />
+        <Container as="main" maxW='container.xl'>
+          <Component {...pageProps} />
+        </Container>
       </ChakraProvider>
     </>
   );
