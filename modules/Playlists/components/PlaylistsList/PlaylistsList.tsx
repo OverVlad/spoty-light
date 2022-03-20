@@ -11,12 +11,15 @@ export const PlaylistsList = () => {
   const onPlaylistSelect = useCallback(
     (e: SyntheticEvent<HTMLSelectElement>) => {
       const playlistId = e.currentTarget.value;
-      dispatch(selectPlaylist({ playlistId }));
+
+      if (playlistId) {
+        dispatch(selectPlaylist({ playlistId }));
+      } else {
+        selectPlaylist({});
+      }
     },
     [dispatch],
   );
-
-  console.log(selectedPlaylist);
 
   return (
     <HStack spacing={3} alignItems="flex-start">
