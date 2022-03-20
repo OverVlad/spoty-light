@@ -1,4 +1,4 @@
-import { HStack, Select, Text } from '@chakra-ui/react';
+import { VStack, Select, Text } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { playlistSelectors, selectPlaylist } from '../../playlistsSlice';
 import { SyntheticEvent, useCallback } from 'react';
@@ -22,7 +22,7 @@ export const PlaylistsList = () => {
   );
 
   return (
-    <HStack spacing={3} alignItems="flex-start">
+    <VStack spacing={3} alignItems="flex-start">
       <Select placeholder="Select playlist" onChange={onPlaylistSelect} value={selectedPlaylist?.id} maxW="300px">
         {playlists.map((playlist) => (
           <option value={playlist.id} key={playlist.id}>
@@ -31,7 +31,7 @@ export const PlaylistsList = () => {
         ))}
       </Select>
 
-      <Text>{selectedPlaylist?.description}</Text>
-    </HStack>
+      <Text wordBreak="break-word">{selectedPlaylist?.description}</Text>
+    </VStack>
   );
 };
