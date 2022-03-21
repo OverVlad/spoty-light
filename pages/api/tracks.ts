@@ -2,17 +2,16 @@ import { apiRouteHandler } from '../../utils/api-handler';
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import { getAccessToken } from '../../utils/spotify-access-token';
-import { SearchTracksRequest } from '../../types/api';
+import { SearchTracksRequest, SearchTrackResponse, ApiErrorType } from '../../types/api';
 import { getSession } from 'next-auth/react';
-import { Track } from '../../types/Playlists';
 
-type Artist = {
+type SpotifyArtist = {
   id: string;
   name: string;
   href: string;
 };
 
-type SearchTrackResponse = {
+type SpotifyTrack = {
   href: string;
   id: string;
   name: string;
@@ -23,14 +22,15 @@ type SearchTrackResponse = {
     name: string;
     release_date: string;
     total_tracks: number;
+    images: { height: number; width: number; url: string }[];
   };
-  artists: Artist[];
+  artists: SpotifyArtist[];
 };
 
-type SearchResponse = {
+type SpotifySearchResponse = {
   tracks: {
     href: 'https://api.spotify.com/v1/search?query=12&type=track&offset=0&limit=20';
-    items: SearchTrackResponse[];
+    items: SpotifyTrack[];
     limit: 20;
     next: 'https://api.spotify.com/v1/search?query=12&type=track&offset=20&limit=20';
     offset: 0;
@@ -40,7 +40,7 @@ type SearchResponse = {
 };
 
 export default apiRouteHandler({
-  get: async (req: NextApiRequest, res: NextApiResponse<{ message: string } | { tracks: Track[] }>) => {
+  get: async (req: NextApiRequest, res: NextApiResponse<SearchTrackResponse | ApiErrorType>) => {
     const { query } = req.query as SearchTracksRequest;
     const session = await getSession({ req });
 
@@ -60,7 +60,7 @@ export default apiRouteHandler({
 
     const {
       data: { tracks },
-    } = await axios.get<SearchResponse>('https://api.spotify.com/v1/search', {
+    } = await axios.get<SpotifySearchResponse>('https://api.spotify.com/v1/search', {
       params: {
         q: query,
         type: 'track',
@@ -77,6 +77,7 @@ export default apiRouteHandler({
         album: {
           name: t.album.name,
           release_date: t.album.release_date,
+          images: t.album.images,
         },
       })),
     });

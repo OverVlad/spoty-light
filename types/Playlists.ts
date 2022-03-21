@@ -5,6 +5,12 @@ export type Playlist = {
   tracks: Track[];
 };
 
+type AlbumImage = {
+  height: number;
+  width: number;
+  url: string;
+};
+
 type Artist = {
   id: string;
   name: string;
@@ -18,5 +24,6 @@ export type Track = {
   album: {
     name: string;
     release_date: string;
+    images: AlbumImage[];
   };
 };
