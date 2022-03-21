@@ -5,11 +5,18 @@ export type Playlist = {
   tracks: Track[];
 };
 
+type Artist = {
+  id: string;
+  name: string;
+};
+
 export type Track = {
   id: string;
   name: string;
-  cover: string;
-  artist: string;
-  album: string;
-  releaseData: Date;
+  preview_url: string;
+  artist: Artist[];
+  album: {
+    name: string;
+    release_date: string;
+  };
 };

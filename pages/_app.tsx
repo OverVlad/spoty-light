@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider, Container } from '@chakra-ui/react';
 import Head from 'next/head';
 import { Header } from '../components/Header/Header';
@@ -9,7 +10,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <>
       <Head>
@@ -18,16 +19,18 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <ChakraProvider>
-            <Header />
-            <Container as="main" maxW="container.xl">
-              <Component {...pageProps} />
-            </Container>
-          </ChakraProvider>
-        </Provider>
-      </QueryClientProvider>
+      <SessionProvider session={session}>
+        <QueryClientProvider client={queryClient}>
+          <Provider store={store}>
+            <ChakraProvider>
+              <Header />
+              <Container as="main" maxW="container.xl">
+                <Component {...pageProps} />
+              </Container>
+            </ChakraProvider>
+          </Provider>
+        </QueryClientProvider>
+      </SessionProvider>
     </>
   );
 }

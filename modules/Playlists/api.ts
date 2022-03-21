@@ -1,3 +1,4 @@
 import axios from 'axios';
+import { SearchTracksRequest } from '../../types/api';
 
-export const fetchTracks = ({ query }: { query: string }) => axios.get('/api/tracks', { params: { query } });
+export const fetchTracks = (params: SearchTracksRequest) => axios.get('/api/tracks', { params });

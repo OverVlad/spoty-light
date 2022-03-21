@@ -8,6 +8,8 @@ type ApiHandler = {
 };
 
 const errorHandler = (err: unknown, res: NextApiResponse) => {
+  // eslint-disable-next-line no-console
+  console.error(err);
   if (axios.isAxiosError(err)) {
     return res.status(err.response?.status || 500).json({
       code: err.response?.data.code || 'ApiRequestError',
