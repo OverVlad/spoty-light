@@ -1,6 +1,6 @@
 import { Box, Button, Flex, useDisclosure } from '@chakra-ui/react';
-import { SongsSearch } from './components/SongsSearch/SongsSearch';
-import { SongsList } from './components/SongsList/SongsList';
+import { TracksSearch } from './components/TracksSearch/TracksSearch';
+import { TracksList } from './components/TracksList/TracksList';
 import { PlaylistsList } from './components/PlaylistsList/PlaylistsList';
 import { AddPlaylistModal } from './components/AddPlaylistModal/AddPlaylistModal';
 
@@ -10,7 +10,7 @@ export const Playlists = () => {
   return (
     <>
       <Flex justifyContent="space-between" pb={10}>
-        <SongsSearch />
+        <TracksSearch />
 
         <Button variant="outline" onClick={onOpen}>
           Add new playlist
@@ -21,7 +21,7 @@ export const Playlists = () => {
         <PlaylistsList />
       </Box>
 
-      <SongsList />
+      <TracksList />
 
       <AddPlaylistModal isOpen={isOpen} onClose={onClose} />
     </>

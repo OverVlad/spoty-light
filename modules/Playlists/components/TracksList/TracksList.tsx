@@ -3,7 +3,7 @@ import { HStack, Image, List, ListItem, VStack, Text, Box, IconButton, Alert, Al
 import { useSelector } from 'react-redux';
 import { playlistSelectors } from '../../playlistsSlice';
 
-export const SongsList = () => {
+export const TracksList = () => {
   const selectedPlaylist = useSelector(playlistSelectors.getSelectedPlaylist);
 
   if (!selectedPlaylist) {

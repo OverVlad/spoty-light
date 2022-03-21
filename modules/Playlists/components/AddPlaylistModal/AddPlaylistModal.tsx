@@ -38,7 +38,7 @@ export const AddPlaylistModal = ({ isOpen, onClose }: AddPlaylistModalProps) => 
     (e: SyntheticEvent<HTMLFormElement>) => {
       e.preventDefault();
       const id = uuidv4();
-      dispatch(addPlaylist({ title: name, description, id, songs: [] }));
+      dispatch(addPlaylist({ title: name, description, id, tracks: [] }));
       dispatch(selectPlaylist({ playlistId: id }));
       onClose();
     },

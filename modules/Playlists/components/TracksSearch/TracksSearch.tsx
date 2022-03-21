@@ -1,6 +1,6 @@
 import { HStack, Button, Input } from '@chakra-ui/react';
 
-export const SongsSearch = () => {
+export const TracksSearch = () => {
   return (
     <HStack>
       <Input placeholder="Search for a track" />

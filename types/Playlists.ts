@@ -2,10 +2,10 @@ export type Playlist = {
   id: string;
   title: string;
   description?: string;
-  songs: Song[];
+  tracks: Track[];
 };
 
-export type Song = {
+export type Track = {
   id: string;
   name: string;
   cover: string;
