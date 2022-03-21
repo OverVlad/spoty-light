@@ -5,11 +5,16 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - node.js v16+
 
 ## Getting Started
-First, install dependencies
+1. Install dependencies
 ```bash
 yarn install
 ````
-Run the development server:
+2. Copy env variables
+```bash
+cp .env.example .env.local
+```
+3. Add required env variables (from Spotify)
+4. Run the development server:
 ```bash
 yarn dev
 ```
