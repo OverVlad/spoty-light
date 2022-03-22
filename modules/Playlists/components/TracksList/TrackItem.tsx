@@ -1,4 +1,4 @@
-import { Box, HStack, IconButton, Image, ListItem, Text, VStack } from '@chakra-ui/react';
+import { Box, Flex, HStack, IconButton, Image, ListItem, Text, VStack } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { Track } from '../../../../types/Playlists';
 import { useCallback } from 'react';
@@ -16,7 +16,7 @@ export const TrackItem = ({ track, onTrackRemove }: TrackItemProps) => {
   return (
     <ListItem p={3} border="1px" borderRadius="md" borderColor="gray.200">
       <HStack justifyContent="space-between">
-        <HStack>
+        <HStack flex={{ base: 1, md: 0.6 }}>
           <Image w="50px" h="50px" src={track.album.images[0].url} alt={`${track.name} image`} mr={3} />
 
           <VStack alignItems="flex-start">
@@ -25,9 +25,13 @@ export const TrackItem = ({ track, onTrackRemove }: TrackItemProps) => {
           </VStack>
         </HStack>
 
-        <Text>{track.album.name}</Text>
+        <Flex flexDirection={{ base: 'column', md: 'row' }} flex={1} alignItems="center">
+          <Text mb={{ base: 3, md: 0 }} flex={1}>
+            {track.album.name}
+          </Text>
 
-        <Text>{track.album.release_date}</Text>
+          <Text flex={1}>{track.album.release_date}</Text>
+        </Flex>
 
         <Box>
           <IconButton icon={<DeleteIcon />} aria-label="Delete song" onClick={onRemove} />

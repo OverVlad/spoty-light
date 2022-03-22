@@ -31,11 +31,11 @@ export const TracksSearch = () => {
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && !!searchText) {
         onSearchClick();
       }
     },
-    [onSearchClick],
+    [onSearchClick, searchText],
   );
 
   const onInputFocus = useCallback(() => {
@@ -56,7 +56,7 @@ export const TracksSearch = () => {
   }, [isOpen]);
 
   return (
-    <Box pos="relative" w={600} maxW="100%" ref={containerRef}>
+    <Box pos="relative" ref={containerRef}>
       <HStack pos="relative">
         <Input
           placeholder="Search for a track"

@@ -9,8 +9,10 @@ export const Playlists = () => {
 
   return (
     <>
-      <Flex justifyContent="space-between" pb={10}>
-        <TracksSearch />
+      <Flex justifyContent="space-between" pb={10} flexWrap="wrap">
+        <Box mb={2} w={600} maxW="100%">
+          <TracksSearch />
+        </Box>
 
         <Button variant="outline" onClick={onOpen}>
           Add new playlist
