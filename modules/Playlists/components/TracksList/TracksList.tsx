@@ -21,7 +21,7 @@ export const TracksList = () => {
     return (
       <Alert status="info">
         <AlertIcon />
-        Select playlist to see a songs
+        Select playlist to see tracks
       </Alert>
     );
   }

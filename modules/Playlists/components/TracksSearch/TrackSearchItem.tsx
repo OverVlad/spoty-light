@@ -1,17 +1,23 @@
 import { Track } from '../../../../types/Playlists';
 import { Flex, HStack, IconButton, Image, ListItem, Text } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useCallback } from 'react';
 
 type TrackSearchItemProps = {
   onTrackAdd: (track: Track) => void;
+  onTrackDelete: (trackId: string) => void;
   track: Track;
+  isSelected?: boolean;
 };
 
-export const TrackSearchItem = ({ track, onTrackAdd }: TrackSearchItemProps) => {
-  const onClick = useCallback(() => {
+export const TrackSearchItem = ({ track, onTrackAdd, isSelected, onTrackDelete }: TrackSearchItemProps) => {
+  const onAddTrackClick = useCallback(() => {
     onTrackAdd(track);
   }, [track, onTrackAdd]);
+
+  const onDeleteTrackClick = useCallback(() => {
+    onTrackDelete(track.id);
+  }, [track, onTrackDelete]);
 
   return (
     <ListItem m={3} border="1px solid" p={1} borderRadius="md">
@@ -21,7 +27,21 @@ export const TrackSearchItem = ({ track, onTrackAdd }: TrackSearchItemProps) => 
           <Text fontSize="sm">{track.name}</Text>
         </Flex>
         <Flex flex={1} justifyContent="flex-end">
-          <IconButton colorScheme="blue" icon={<AddIcon />} aria-label="Add track to playlist" onClick={onClick} />
+          {isSelected ? (
+            <IconButton
+              colorScheme="red"
+              icon={<DeleteIcon />}
+              aria-label="Remove track to playlist"
+              onClick={onDeleteTrackClick}
+            />
+          ) : (
+            <IconButton
+              colorScheme="blue"
+              icon={<AddIcon />}
+              aria-label="Add track to playlist"
+              onClick={onAddTrackClick}
+            />
+          )}
         </Flex>
       </HStack>
     </ListItem>
