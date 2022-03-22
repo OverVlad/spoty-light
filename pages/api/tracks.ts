@@ -1,43 +1,8 @@
 import { apiRouteHandler } from '../../utils/api-handler';
 import { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
-import { getAccessToken } from '../../utils/spotify-access-token';
 import { SearchTracksRequest, SearchTrackResponse, ApiErrorType } from '../../types/api';
 import { getSession } from 'next-auth/react';
-
-type SpotifyArtist = {
-  id: string;
-  name: string;
-  href: string;
-};
-
-type SpotifyTrack = {
-  href: string;
-  id: string;
-  name: string;
-  duration_ms: number;
-  preview_url: string;
-  album: {
-    album_type: string;
-    name: string;
-    release_date: string;
-    total_tracks: number;
-    images: { height: number; width: number; url: string }[];
-  };
-  artists: SpotifyArtist[];
-};
-
-type SpotifySearchResponse = {
-  tracks: {
-    href: 'https://api.spotify.com/v1/search?query=12&type=track&offset=0&limit=20';
-    items: SpotifyTrack[];
-    limit: 20;
-    next: 'https://api.spotify.com/v1/search?query=12&type=track&offset=20&limit=20';
-    offset: 0;
-    previous: null;
-    total: 10321;
-  };
-};
+import { getAccessToken, getTracksSearch } from '../../lib/spotify';
 
 export default apiRouteHandler({
   get: async (req: NextApiRequest, res: NextApiResponse<SearchTrackResponse | ApiErrorType>) => {
@@ -52,21 +17,9 @@ export default apiRouteHandler({
 
     const refreshToken = session.user.refreshToken;
 
-    if (!refreshToken) {
-      return res.status(400).json({ message: 'refreshToken is required' });
-    }
-
     const { access_token } = await getAccessToken(refreshToken);
 
-    const {
-      data: { tracks },
-    } = await axios.get<SpotifySearchResponse>('https://api.spotify.com/v1/search', {
-      params: {
-        q: query,
-        type: 'track',
-      },
-      headers: { Authorization: `Bearer ${access_token}` },
-    });
+    const tracks = await getTracksSearch({ access_token, query });
 
     return res.status(200).json({
       tracks: tracks.items.map((t) => ({
