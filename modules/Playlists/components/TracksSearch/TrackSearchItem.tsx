@@ -20,7 +20,7 @@ export const TrackSearchItem = ({ track, onTrackAdd, isSelected, onTrackDelete }
   }, [track, onTrackDelete]);
 
   return (
-    <ListItem m={3} border="1px solid" p={1} borderRadius="md">
+    <ListItem m={3} p={1} border="1px solid" borderColor="gray.500" borderRadius="md">
       <HStack>
         <Image src={track.album.images[0].url} w={50} h={50} alt={track.name} mr={4} />
         <Flex title={track.name} h={50} overflow="hidden" textOverflow="ellipsis" alignItems="center">

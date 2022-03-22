@@ -1,4 +1,4 @@
-import { Box, List, useToast } from '@chakra-ui/react';
+import { Box, List, useColorMode, useToast } from '@chakra-ui/react';
 import { Track } from '../../../../types/Playlists';
 import { useCallback } from 'react';
 import { addTrack, playlistSelectors, removeTrack } from '../../playlistsSlice';
@@ -12,6 +12,7 @@ type TrackSearchContainerProps = {
 export const TrackSearchContainer = ({ tracks }: TrackSearchContainerProps) => {
   const toast = useToast();
   const dispatch = useDispatch();
+  const { colorMode } = useColorMode();
   const selectedPlaylist = useSelector(playlistSelectors.getSelectedPlaylist);
 
   const onTrackAdd = useCallback(
@@ -45,7 +46,16 @@ export const TrackSearchContainer = ({ tracks }: TrackSearchContainerProps) => {
   );
 
   return (
-    <Box pos="absolute" w="100%" bg="gray.100" h={300} overflowY="scroll" zIndex={1} mt={2} borderRadius="md">
+    <Box
+      pos="absolute"
+      w="100%"
+      bg={colorMode === 'light' ? 'gray.100' : 'gray.600'}
+      h={300}
+      overflowY="scroll"
+      zIndex={1}
+      mt={2}
+      borderRadius="md"
+    >
       <List>
         {tracks.map((track) => (
           <TrackSearchItem
