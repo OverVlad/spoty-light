@@ -1,5 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Playlist } from '../../types/Playlists';
+import { Playlist, Track } from '../../types/Playlists';
 import { v4 as uuidv4 } from 'uuid';
 import { RootState } from '../../store/store';
 
@@ -12,7 +12,7 @@ const initialState: PlaylistsState = {
   items: [
     {
       id: uuidv4(),
-      songs: [],
+      tracks: [],
       title: 'Default playlist',
     },
   ],
@@ -24,6 +24,20 @@ export const playlistsSlice = createSlice({
   reducers: {
     addPlaylist: (state, action: PayloadAction<Playlist>) => {
       state.items.push(action.payload);
+    },
+    addTrack: (state, action: PayloadAction<{ playlistId: string; track: Track }>) => {
+      const playlist = state.items.find((playlist) => playlist.id === action.payload.playlistId);
+
+      if (playlist) {
+        playlist.tracks.push(action.payload.track);
+      }
+    },
+    removeTrack: (state, action: PayloadAction<{ trackId: string; playlistId: string }>) => {
+      const playlist = state.items.find((playlist) => playlist.id === action.payload.playlistId);
+
+      if (playlist) {
+        playlist.tracks = playlist.tracks.filter((track) => track.id !== action.payload.trackId);
+      }
     },
     selectPlaylist: (state, action: PayloadAction<{ playlistId?: string }>) => {
       state.selectedPlaylistId = action.payload.playlistId;
@@ -43,4 +57,4 @@ export const playlistSelectors = {
 };
 
 // Action creators are generated for each case reducer function
-export const { addPlaylist, selectPlaylist } = playlistsSlice.actions;
+export const { addPlaylist, selectPlaylist, addTrack, removeTrack } = playlistsSlice.actions;

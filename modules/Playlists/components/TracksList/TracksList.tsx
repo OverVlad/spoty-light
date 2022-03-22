@@ -1,10 +1,21 @@
-import { DeleteIcon } from '@chakra-ui/icons';
-import { HStack, Image, List, ListItem, VStack, Text, Box, IconButton, Alert, AlertIcon } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
-import { playlistSelectors } from '../../playlistsSlice';
+import { List, Alert, AlertIcon } from '@chakra-ui/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { playlistSelectors, removeTrack } from '../../playlistsSlice';
+import { useCallback } from 'react';
+import { TrackItem } from './TrackItem';
 
 export const TracksList = () => {
+  const dispatch = useDispatch();
   const selectedPlaylist = useSelector(playlistSelectors.getSelectedPlaylist);
+
+  const onTrackRemove = useCallback(
+    (trackId: string) => {
+      if (selectedPlaylist) {
+        dispatch(removeTrack({ playlistId: selectedPlaylist.id, trackId }));
+      }
+    },
+    [dispatch, selectedPlaylist],
+  );
 
   if (!selectedPlaylist) {
     return (
@@ -15,7 +26,7 @@ export const TracksList = () => {
     );
   }
 
-  if (selectedPlaylist.songs.length === 0) {
+  if (selectedPlaylist.tracks.length === 0) {
     return (
       <Alert status="info">
         <AlertIcon />
@@ -26,27 +37,8 @@ export const TracksList = () => {
 
   return (
     <List spacing={3}>
-      {selectedPlaylist.songs.map((song) => (
-        <ListItem key={song.id} p={3} border="1px" borderRadius="md" borderColor="gray.200">
-          <HStack justifyContent="space-between">
-            <HStack>
-              <Image w="50px" h="50px" src={song.cover} alt={`${song.name} image`} mr={3} />
-
-              <VStack alignItems="flex-start">
-                <Text fontWeight="bold">{song.name}</Text>
-                <Text>{song.artist}</Text>
-              </VStack>
-            </HStack>
-
-            <Text>{song.album}</Text>
-
-            <Text>{new Intl.DateTimeFormat('en-US').format(song.releaseData)}</Text>
-
-            <Box>
-              <IconButton icon={<DeleteIcon />} aria-label="Delete song" />
-            </Box>
-          </HStack>
-        </ListItem>
+      {selectedPlaylist.tracks.map((track) => (
+        <TrackItem key={track.id} track={track} onTrackRemove={onTrackRemove} />
       ))}
     </List>
   );
