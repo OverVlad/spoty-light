@@ -9,11 +9,13 @@ import {
   ModalHeader,
   ModalOverlay,
   Textarea,
+  useToast,
 } from '@chakra-ui/react';
 import { SyntheticEvent, useCallback, useState } from 'react';
+import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
+import { createPlaylist } from '../../api';
 import { addPlaylist, selectPlaylist } from '../../playlistsSlice';
-import { v4 as uuidv4 } from 'uuid';
 
 type AddPlaylistModalProps = {
   isOpen: boolean;
@@ -21,10 +23,26 @@ type AddPlaylistModalProps = {
 };
 
 export const AddPlaylistModal = ({ isOpen, onClose }: AddPlaylistModalProps) => {
+  const toast = useToast();
   const dispatch = useDispatch();
-
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+
+  const { mutate, isLoading } = useMutation(createPlaylist, {
+    onSuccess: ({ data }) => {
+      dispatch(addPlaylist(data.playlist));
+      dispatch(selectPlaylist({ playlistId: data.playlist.id }));
+    },
+    onSettled: () => {
+      setName('');
+      setDescription('');
+      toast({
+        title: 'Playlist created.',
+        status: 'success',
+      });
+      onClose();
+    },
+  });
 
   const onNameChange = useCallback((e: SyntheticEvent<HTMLInputElement>) => {
     setName(e.currentTarget.value);
@@ -37,12 +55,9 @@ export const AddPlaylistModal = ({ isOpen, onClose }: AddPlaylistModalProps) => 
   const onSubmit = useCallback(
     (e: SyntheticEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const id = uuidv4();
-      dispatch(addPlaylist({ title: name, description, id, tracks: [] }));
-      dispatch(selectPlaylist({ playlistId: id }));
-      onClose();
+      mutate({ playlist: { name, description } });
     },
-    [name, description, dispatch, onClose],
+    [name, description, mutate],
   );
 
   return (
@@ -67,7 +82,7 @@ export const AddPlaylistModal = ({ isOpen, onClose }: AddPlaylistModalProps) => 
             <Button variant="ghost" onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme="blue" mr={3} type="submit">
+            <Button colorScheme="blue" mr={3} type="submit" isLoading={isLoading}>
               Create
             </Button>
           </ModalFooter>

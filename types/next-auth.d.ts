@@ -9,6 +9,7 @@ declare module 'next-auth' {
   interface Session {
     user: JWT & {
       refreshToken: string;
+      id: string;
     };
   }
 }

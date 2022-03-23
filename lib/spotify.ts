@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { CreatePlaylistRequest } from '../types/api';
 
 export const getAccessToken = async (refreshToken: string) => {
   const clientId = process.env.SPOTIFY_CLIENT_ID || '';
@@ -127,4 +128,28 @@ export const getPlaylistsTracks = async ({
   });
 
   return data.items;
+};
+
+export const createPlaylist = async ({
+  refreshToken,
+  userId,
+  playlist,
+}: {
+  refreshToken: string;
+  userId: string;
+  playlist: CreatePlaylistRequest['playlist'];
+}) => {
+  const { access_token } = await getAccessToken(refreshToken);
+
+  const { data } = await axios.post<SpotifyPlaylist>(
+    `https://api.spotify.com/v1/users/${userId}/playlists`,
+    {
+      ...playlist,
+    },
+    {
+      headers: { Authorization: `Bearer ${access_token}` },
+    },
+  );
+
+  return data;
 };
