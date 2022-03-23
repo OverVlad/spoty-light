@@ -57,6 +57,13 @@ export const playlistsSlice = createSlice({
         playlist.tracks.unshift(action.payload.track);
       }
     },
+    updatePlaylist: (state, action: PayloadAction<Playlist>) => {
+      const index = state.items.findIndex((p) => p.id === action.payload.id);
+
+      if (index !== -1) {
+        state.items[index] = action.payload;
+      }
+    },
     removeTrack: (state, action: PayloadAction<{ trackId: string; playlistId: string }>) => {
       const playlist = state.items.find((playlist) => playlist.id === action.payload.playlistId);
 
@@ -96,4 +103,4 @@ export const playlistSelectors = {
 };
 
 // Action creators are generated for each case reducer function
-export const { addPlaylist, selectPlaylist, addTrack, removeTrack } = playlistsSlice.actions;
+export const { addPlaylist, selectPlaylist, addTrack, removeTrack, updatePlaylist } = playlistsSlice.actions;

@@ -1,8 +1,15 @@
 import { apiRouteHandler } from '../../../utils/api-handler';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ApiErrorType, CreatePlaylistRequest, CreatePlaylistResponse, PlaylistsResponse } from '../../../types/api';
+import {
+  ApiErrorType,
+  CreatePlaylistRequest,
+  CreatePlaylistResponse,
+  PlaylistsResponse,
+  UpdatePlaylistRequest,
+  UpdatePlaylistResponse,
+} from '../../../types/api';
 import { getSession } from 'next-auth/react';
-import { createPlaylist, getCurrentUserPlaylists, getPlaylistsTracks } from '../../../lib/spotify';
+import { createPlaylist, getCurrentUserPlaylists, getPlaylistsTracks, updatePlaylist } from '../../../lib/spotify';
 
 export default apiRouteHandler({
   get: async (req: NextApiRequest, res: NextApiResponse<PlaylistsResponse | ApiErrorType>) => {
@@ -67,6 +74,27 @@ export default apiRouteHandler({
         description: playlist.description,
         tracks: [],
       },
+    });
+  },
+  put: async (req, res: NextApiResponse<UpdatePlaylistResponse | ApiErrorType>) => {
+    const body = req.body as UpdatePlaylistRequest;
+
+    const session = await getSession({ req });
+
+    if (!session) {
+      return res.status(401).json({
+        message: 'Player is not authenticated',
+      });
+    }
+
+    const {
+      user: { refreshToken },
+    } = session;
+
+    await updatePlaylist({ refreshToken, playlist: body.playlist });
+
+    return res.status(200).json({
+      playlist: body.playlist,
     });
   },
 });

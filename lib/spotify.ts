@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { CreatePlaylistRequest } from '../types/api';
+import { Playlist } from '../types/Playlists';
 
 export const getAccessToken = async (refreshToken: string) => {
   const clientId = process.env.SPOTIFY_CLIENT_ID || '';
@@ -177,4 +178,19 @@ export const addItemsToPlaylist = async ({
   );
 
   return data;
+};
+
+export const updatePlaylist = async ({ refreshToken, playlist }: { refreshToken: string; playlist: Playlist }) => {
+  const { access_token } = await getAccessToken(refreshToken);
+
+  await axios.put<SpotifyPlaylist>(
+    `https://api.spotify.com/v1/playlists/${playlist.id}`,
+    {
+      name: playlist.title,
+      ...(playlist.description ? { description: playlist.description } : {}),
+    },
+    {
+      headers: { Authorization: `Bearer ${access_token}` },
+    },
+  );
 };

@@ -2,7 +2,7 @@ import { Box, Button, Flex, useDisclosure } from '@chakra-ui/react';
 import { TracksSearch } from './components/TracksSearch/TracksSearch';
 import { TracksList } from './components/TracksList/TracksList';
 import { PlaylistsList } from './components/PlaylistsList/PlaylistsList';
-import { AddPlaylistModal } from './components/AddPlaylistModal/AddPlaylistModal';
+import { ManagePlaylistModal } from './components/ManagePlaylistModal/ManagePlaylistModal';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { loadPlaylistsStart } from './playlistsSlice';
@@ -33,7 +33,7 @@ export const PlaylistsManager = () => {
 
       <TracksList />
 
-      <AddPlaylistModal isOpen={isOpen} onClose={onClose} />
+      <ManagePlaylistModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

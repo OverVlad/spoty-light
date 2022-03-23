@@ -13,7 +13,7 @@ const errorHandler = (err: unknown, res: NextApiResponse) => {
   if (axios.isAxiosError(err)) {
     return res.status(err.response?.status || 500).json({
       code: err.response?.data.code || 'ApiRequestError',
-      message: err.response?.data?.attributes?.err || err.response?.data.message || 'Api request error',
+      message: err.response?.data?.error || 'Api request error',
     });
   } else {
     return res.status(500).json({ message: err });

@@ -11,3 +11,6 @@ export type CreatePlaylistRequest = { playlist: { name: string; description?: st
 
 export type AddTrackPlaylistResponse = { track: Track; playlistId: string };
 export type AddTrackPlaylistRequest = { track: Track; playlistId: string };
+
+export type UpdatePlaylistResponse = { playlist: Playlist };
+export type UpdatePlaylistRequest = { playlist: Playlist };
