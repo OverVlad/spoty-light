@@ -1,20 +1,41 @@
-import { List, Alert, AlertIcon } from '@chakra-ui/react';
+import { List, Alert, AlertIcon, useToast } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { playlistSelectors, removeTrack } from '../../playlistsSlice';
+import { addTrack, playlistSelectors, removeTrack } from '../../playlistsSlice';
 import { useCallback } from 'react';
 import { TrackItem } from './TrackItem';
+import { useMutation } from 'react-query';
+import { removePlaylistTrack } from '../../api';
+import { Track } from '../../../../types/Playlists';
 
 export const TracksList = () => {
+  const toast = useToast();
   const dispatch = useDispatch();
   const selectedPlaylist = useSelector(playlistSelectors.getSelectedPlaylist);
+  const { mutate, isLoading } = useMutation(removePlaylistTrack, {
+    onMutate: ({ playlistId, tracks }) => {
+      dispatch(removeTrack({ playlistId: playlistId, trackId: tracks[0].id }));
+    },
+    onError: (_, { playlistId, tracks }) => {
+      toast({
+        title: 'Cannot remove the track.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+
+      const track = tracks[0];
+
+      dispatch(addTrack({ playlistId, track }));
+    },
+  });
 
   const onTrackRemove = useCallback(
-    (trackId: string) => {
+    (track: Track) => {
       if (selectedPlaylist) {
-        dispatch(removeTrack({ playlistId: selectedPlaylist.id, trackId }));
+        mutate({ playlistId: selectedPlaylist.id, tracks: [track] });
       }
     },
-    [dispatch, selectedPlaylist],
+    [selectedPlaylist, mutate],
   );
 
   if (!selectedPlaylist) {
@@ -38,7 +59,7 @@ export const TracksList = () => {
   return (
     <List spacing={3}>
       {selectedPlaylist.tracks.map((track) => (
-        <TrackItem key={track.id} track={track} onTrackRemove={onTrackRemove} />
+        <TrackItem key={track.id} track={track} onTrackRemove={onTrackRemove} isLoading={isLoading} />
       ))}
     </List>
   );

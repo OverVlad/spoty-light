@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 
 type TrackSearchItemProps = {
   onTrackAdd: (track: Track) => void;
-  onTrackDelete: (trackId: string) => void;
+  onTrackDelete: (track: Track) => void;
   track: Track;
   isSelected?: boolean;
 };
@@ -16,7 +16,7 @@ export const TrackSearchItem = ({ track, onTrackAdd, isSelected, onTrackDelete }
   }, [track, onTrackAdd]);
 
   const onDeleteTrackClick = useCallback(() => {
-    onTrackDelete(track.id);
+    onTrackDelete(track);
   }, [track, onTrackDelete]);
 
   return (

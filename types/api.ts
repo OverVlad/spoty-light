@@ -14,3 +14,5 @@ export type AddTrackPlaylistRequest = { track: Track; playlistId: string };
 
 export type UpdatePlaylistResponse = { playlist: Playlist };
 export type UpdatePlaylistRequest = { playlist: Playlist };
+
+export type RemovePlaylistTrackRequest = { playlistId: string; tracks: Track[] };

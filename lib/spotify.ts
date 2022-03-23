@@ -194,3 +194,20 @@ export const updatePlaylist = async ({ refreshToken, playlist }: { refreshToken:
     },
   );
 };
+
+export const removeItemPlaylist = async ({
+  refreshToken,
+  playlistId,
+  tracksUri,
+}: {
+  refreshToken: string;
+  playlistId: string;
+  tracksUri: string[];
+}) => {
+  const { access_token } = await getAccessToken(refreshToken);
+
+  await axios.delete<SpotifyPlaylist>(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+    headers: { Authorization: `Bearer ${access_token}` },
+    data: { tracks: tracksUri.map((uri) => ({ uri })) },
+  });
+};

@@ -5,7 +5,7 @@ import { addTrack, playlistSelectors, removeTrack } from '../../playlistsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { TrackSearchItem } from './TrackSearchItem';
 import { useMutation } from 'react-query';
-import { addTrackToPlaylist } from '../../api';
+import { addTrackToPlaylist, removePlaylistTrack } from '../../api';
 
 type TrackSearchContainerProps = {
   tracks: Track[];
@@ -15,7 +15,7 @@ export const TrackSearchContainer = ({ tracks }: TrackSearchContainerProps) => {
   const toast = useToast();
   const dispatch = useDispatch();
   const { colorMode } = useColorMode();
-  const { mutate } = useMutation(addTrackToPlaylist, {
+  const { mutate: addTrackMutate } = useMutation(addTrackToPlaylist, {
     onMutate: ({ track, playlistId }) => {
       dispatch(addTrack({ playlistId: playlistId, track: track }));
     },
@@ -34,7 +34,7 @@ export const TrackSearchContainer = ({ tracks }: TrackSearchContainerProps) => {
   const onTrackAdd = useCallback(
     (track: Track) => {
       if (selectedPlaylist) {
-        mutate({ track, playlistId: selectedPlaylist.id });
+        addTrackMutate({ track, playlistId: selectedPlaylist.id });
       } else {
         toast({
           title: 'Choose playlist to add track',
@@ -43,13 +43,19 @@ export const TrackSearchContainer = ({ tracks }: TrackSearchContainerProps) => {
         });
       }
     },
-    [mutate, selectedPlaylist, toast],
+    [addTrackMutate, selectedPlaylist, toast],
   );
 
+  const { mutate: removeTrackMutate } = useMutation(removePlaylistTrack, {
+    onSuccess: (_, { playlistId, tracks }) => {
+      dispatch(removeTrack({ playlistId: playlistId, trackId: tracks[0].id }));
+    },
+  });
+
   const onTrackDelete = useCallback(
-    (trackId: string) => {
+    (track: Track) => {
       if (selectedPlaylist) {
-        dispatch(removeTrack({ playlistId: selectedPlaylist.id, trackId }));
+        removeTrackMutate({ playlistId: selectedPlaylist.id, tracks: [track] });
       } else {
         toast({
           title: 'Choose playlist to add track',
@@ -58,7 +64,7 @@ export const TrackSearchContainer = ({ tracks }: TrackSearchContainerProps) => {
         });
       }
     },
-    [selectedPlaylist, dispatch, toast],
+    [selectedPlaylist, removeTrackMutate, toast],
   );
 
   return (

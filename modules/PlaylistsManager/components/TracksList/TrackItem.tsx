@@ -5,12 +5,13 @@ import { useCallback } from 'react';
 
 type TrackItemProps = {
   track: Track;
-  onTrackRemove: (trackId: string) => void;
+  isLoading?: boolean;
+  onTrackRemove: (track: Track) => void;
 };
 
-export const TrackItem = ({ track, onTrackRemove }: TrackItemProps) => {
+export const TrackItem = ({ track, onTrackRemove, isLoading }: TrackItemProps) => {
   const onRemove = useCallback(() => {
-    onTrackRemove(track.id);
+    onTrackRemove(track);
   }, [track, onTrackRemove]);
 
   return (
@@ -34,7 +35,7 @@ export const TrackItem = ({ track, onTrackRemove }: TrackItemProps) => {
         </Flex>
 
         <Box>
-          <IconButton icon={<DeleteIcon />} aria-label="Delete song" onClick={onRemove} />
+          <IconButton isLoading={isLoading} icon={<DeleteIcon />} aria-label="Delete song" onClick={onRemove} />
         </Box>
       </HStack>
     </ListItem>

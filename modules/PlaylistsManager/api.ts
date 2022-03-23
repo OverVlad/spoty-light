@@ -5,6 +5,7 @@ import {
   CreatePlaylistRequest,
   CreatePlaylistResponse,
   PlaylistsResponse,
+  RemovePlaylistTrackRequest,
   SearchTrackResponse,
   SearchTracksRequest,
   UpdatePlaylistRequest,
@@ -20,3 +21,6 @@ export const addTrackToPlaylist = (body: AddTrackPlaylistRequest) =>
 
 export const updatePlaylist = (body: UpdatePlaylistRequest) =>
   axios.put<UpdatePlaylistResponse>('/api/playlists', body);
+
+export const removePlaylistTrack = (body: RemovePlaylistTrackRequest) =>
+  axios.delete<undefined>('/api/playlists/tracks', { data: body });
