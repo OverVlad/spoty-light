@@ -3,6 +3,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Requirements
 - yarn (better to use because no package-lock.json and dependencies can be wrong)
 - node.js v16+
+- Empty port 3000 for the localhost
 
 ## Getting Started
 1. Install dependencies
