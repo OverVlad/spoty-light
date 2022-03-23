@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import { PlaylistsManager } from '../PlaylistsManager';
 import { mswServer } from '../../../mocks/server-mocks';
 import userEvent from '@testing-library/user-event';
-import { CreatePlaylistRequest } from '../../../types/api';
+import { CreatePlaylistRequest, UpdatePlaylistRequest } from '../../../types/api';
 
 const renderPlaylist = () => render(<PlaylistsManager />);
 
@@ -50,6 +50,40 @@ describe('PlaylistsManager module tests', () => {
 
     await waitFor(() =>
       expect(screen.getByRole<HTMLOptionElement>('option', { name: 'Test Playlist' }).selected).toBeTruthy(),
+    );
+  });
+
+  it('should update playlist', async () => {
+    mswServer.use(
+      rest.get('/api/playlists', (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json({ playlists: [{ id: 'id', title: 'Playlist Title', tracks: [] }] }));
+      }),
+      rest.put<UpdatePlaylistRequest>('/api/playlists', (req, res, ctx) => {
+        return res(ctx.status(200), ctx.json({ playlist: req.body.playlist }));
+      }),
+    );
+
+    renderPlaylist();
+
+    const playlistOption = await screen.findByText<HTMLOptionElement>('Playlist Title');
+    const playlistSelectEl = await screen.findByTestId('select-playlist');
+
+    userEvent.selectOptions(playlistSelectEl, [playlistOption.value]);
+
+    const updatePlaylistBtn = await screen.findByText('Update playlist details');
+
+    userEvent.click(updatePlaylistBtn);
+
+    const inputName = await screen.getByTestId('playlist-name-input');
+    const updateBtn = await screen.getByText('Update');
+
+    userEvent.type(inputName, ' + new text');
+    userEvent.click(updateBtn);
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole<HTMLOptionElement>('option', { name: 'Playlist Title + new text' }).selected,
+      ).toBeTruthy(),
     );
   });
 });

@@ -104,10 +104,17 @@ export const ManagePlaylistModal = ({ isOpen, onClose, selectedPlaylist }: AddPl
       <ModalOverlay />
       <ModalContent>
         <form onSubmit={onSubmit}>
-          <ModalHeader>Add new playlist</ModalHeader>
+          <ModalHeader>{!!selectedPlaylist ? 'Update playlist' : 'Add new playlist'}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input placeholder="Playlist name" mb={3} required onChange={onNameChange} value={name} />
+            <Input
+              placeholder="Playlist name"
+              data-testid="playlist-name-input"
+              mb={3}
+              required
+              onChange={onNameChange}
+              value={name}
+            />
             <Textarea
               placeholder="Playlist description (optional). Max 250 char"
               resize="none"

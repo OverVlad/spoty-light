@@ -102,5 +102,4 @@ export const playlistSelectors = {
   getFetchStatus: createSelector(selectSelf, (playlists) => playlists.fetchStatus),
 };
 
-// Action creators are generated for each case reducer function
 export const { addPlaylist, selectPlaylist, addTrack, removeTrack, updatePlaylist } = playlistsSlice.actions;
