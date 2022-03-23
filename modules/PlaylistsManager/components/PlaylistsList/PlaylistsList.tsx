@@ -26,7 +26,13 @@ export const PlaylistsList = () => {
   return (
     <VStack spacing={3} alignItems="flex-start">
       <Skeleton isLoaded={fetchStatus === 'success'}>
-        <Select placeholder="Select playlist" onChange={onPlaylistSelect} value={selectedPlaylist?.id} maxW="300px">
+        <Select
+          placeholder="Select playlist"
+          onChange={onPlaylistSelect}
+          value={selectedPlaylist?.id}
+          maxW="300px"
+          data-testid="select-playlist"
+        >
           {playlists.map((playlist) => (
             <option value={playlist.id} key={playlist.id}>
               {playlist.title}

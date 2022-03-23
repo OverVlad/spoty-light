@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { loadPlaylistsStart } from './playlistsSlice';
 
-export const Playlists = () => {
+export const PlaylistsManager = () => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
 

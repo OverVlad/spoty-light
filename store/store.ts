@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { playlistsSlice } from '../modules/Playlists/playlistsSlice';
+import { playlistsSlice } from '../modules/PlaylistsManager/playlistsSlice';
 import createSagaMiddleware from 'redux-saga';
 import { rootSaga } from './saga';
 

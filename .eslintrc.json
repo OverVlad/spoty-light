@@ -11,5 +11,9 @@
       "warn",
       { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
     ]
+  },
+  "env": {
+    "browser": true,
+    "jest": true
   }
 }

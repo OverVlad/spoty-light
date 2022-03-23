@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { Box, Flex, Button, Heading, VStack } from '@chakra-ui/react';
-import { Playlists } from '../modules/Playlists/Playlists';
+import { PlaylistsManager } from '../modules/PlaylistsManager/PlaylistsManager';
 import { signIn, useSession } from 'next-auth/react';
 import { useCallback } from 'react';
 
@@ -14,7 +14,7 @@ const Home: NextPage = () => {
   return (
     <Box py={4}>
       {session ? (
-        <Playlists />
+        <PlaylistsManager />
       ) : (
         <Flex h="90vh" justifyContent="center" alignItems="center">
           <VStack>
