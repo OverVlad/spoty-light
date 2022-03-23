@@ -1,22 +1,47 @@
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Playlist, Track } from '../../types/Playlists';
-import { v4 as uuidv4 } from 'uuid';
 import { RootState } from '../../store/store';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { fetchUserPlaylists } from './api';
+import { PlaylistsResponse } from '../../types/api';
+import { FetchStatus } from '../../types/common';
+import { createStandaloneToast } from '@chakra-ui/react';
 
 export interface PlaylistsState {
   items: Playlist[];
+  fetchStatus: FetchStatus;
   selectedPlaylistId?: string;
 }
 
 const initialState: PlaylistsState = {
-  items: [
-    {
-      id: uuidv4(),
-      tracks: [],
-      title: 'Default playlist',
-    },
-  ],
+  items: [],
+  fetchStatus: 'initial',
 };
+
+export const loadPlaylistsStart = createAction('playlists/loadPlaylistsStart');
+export const loadPlaylistsSuccess = createAction<Playlist[]>('playlists/loadPlaylistsSuccess');
+export const loadPlaylistsFailed = createAction('playlists/loadPlaylistsFailed');
+
+function* loadPlaylistsSaga() {
+  const toast = createStandaloneToast();
+
+  try {
+    const { data }: { data: PlaylistsResponse } = yield call(fetchUserPlaylists);
+    yield put(loadPlaylistsSuccess(data.playlists));
+  } catch (e) {
+    toast({
+      title: 'An error occurred while fetching playlists. Try to reload the page.',
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+    });
+    yield put(loadPlaylistsFailed());
+  }
+}
+
+export function* playlistsSaga() {
+  yield takeLatest(loadPlaylistsStart, loadPlaylistsSaga);
+}
 
 export const playlistsSlice = createSlice({
   name: 'playlists',
@@ -43,6 +68,19 @@ export const playlistsSlice = createSlice({
       state.selectedPlaylistId = action.payload.playlistId;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loadPlaylistsSuccess, (state, action) => {
+        state.fetchStatus = 'success';
+        state.items = [...state.items, ...action.payload];
+      })
+      .addCase(loadPlaylistsStart, (state) => {
+        state.fetchStatus = 'loading';
+      })
+      .addCase(loadPlaylistsFailed, (state) => {
+        state.fetchStatus = 'failed';
+      });
+  },
 });
 
 const selectSelf = (state: RootState) => state.playlists;
@@ -54,6 +92,7 @@ export const playlistSelectors = {
 
     return playlists.items.find((p) => p.id === selectedPlaylistId);
   }),
+  getFetchStatus: createSelector(selectSelf, (playlists) => playlists.fetchStatus),
 };
 
 // Action creators are generated for each case reducer function

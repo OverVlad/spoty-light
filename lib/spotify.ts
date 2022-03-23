@@ -57,7 +57,9 @@ type SpotifySearchResponse = {
   };
 };
 
-export const getTracksSearch = async ({ access_token, query }: { access_token: string; query: string }) => {
+export const getTracksSearch = async ({ refreshToken, query }: { refreshToken: string; query: string }) => {
+  const { access_token } = await getAccessToken(refreshToken);
+
   const {
     data: { tracks },
   } = await axios.get<SpotifySearchResponse>('https://api.spotify.com/v1/search', {
@@ -93,7 +95,9 @@ type SpotifyPlaylistResponse = {
   items: SpotifyPlaylist[];
 };
 
-export const getCurrentUserPlaylists = async ({ access_token }: { access_token: string }) => {
+export const getCurrentUserPlaylists = async ({ refreshToken }: { refreshToken: string }) => {
+  const { access_token } = await getAccessToken(refreshToken);
+
   const { data } = await axios.get<SpotifyPlaylistResponse>('https://api.spotify.com/v1/me/playlists', {
     headers: { Authorization: `Bearer ${access_token}` },
   });
@@ -111,12 +115,13 @@ type SpotifyTracksResponse = {
 };
 
 export const getPlaylistsTracks = async ({
-  access_token,
+  refreshToken,
   playlistId,
 }: {
-  access_token: string;
+  refreshToken: string;
   playlistId: string;
 }) => {
+  const { access_token } = await getAccessToken(refreshToken);
   const { data } = await axios.get<SpotifyTracksResponse>(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
     headers: { Authorization: `Bearer ${access_token}` },
   });

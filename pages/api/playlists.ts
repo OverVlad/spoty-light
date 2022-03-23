@@ -2,7 +2,7 @@ import { apiRouteHandler } from '../../utils/api-handler';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ApiErrorType, PlaylistsResponse } from '../../types/api';
 import { getSession } from 'next-auth/react';
-import { getAccessToken, getCurrentUserPlaylists, getPlaylistsTracks } from '../../lib/spotify';
+import { getCurrentUserPlaylists, getPlaylistsTracks } from '../../lib/spotify';
 
 export default apiRouteHandler({
   get: async (req: NextApiRequest, res: NextApiResponse<PlaylistsResponse | ApiErrorType>) => {
@@ -16,13 +16,11 @@ export default apiRouteHandler({
 
     const refreshToken = session.user.refreshToken;
 
-    const { access_token } = await getAccessToken(refreshToken);
-
-    const playlists = await getCurrentUserPlaylists({ access_token });
+    const playlists = await getCurrentUserPlaylists({ refreshToken });
 
     const playlistsWithTracks = await Promise.all(
       playlists.map(async (playlist) => {
-        const tracks = await getPlaylistsTracks({ access_token, playlistId: playlist.id });
+        const tracks = await getPlaylistsTracks({ refreshToken, playlistId: playlist.id });
         return {
           id: playlist.id,
           title: playlist.name,

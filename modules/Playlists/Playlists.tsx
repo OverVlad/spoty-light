@@ -3,9 +3,17 @@ import { TracksSearch } from './components/TracksSearch/TracksSearch';
 import { TracksList } from './components/TracksList/TracksList';
 import { PlaylistsList } from './components/PlaylistsList/PlaylistsList';
 import { AddPlaylistModal } from './components/AddPlaylistModal/AddPlaylistModal';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { loadPlaylistsStart } from './playlistsSlice';
 
 export const Playlists = () => {
+  const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    dispatch(loadPlaylistsStart());
+  }, [dispatch]);
 
   return (
     <>

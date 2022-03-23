@@ -1,11 +1,13 @@
-import { VStack, Select, Text } from '@chakra-ui/react';
+import { VStack, Select, Text, Skeleton } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { playlistSelectors, selectPlaylist } from '../../playlistsSlice';
 import { SyntheticEvent, useCallback } from 'react';
+import sanitizeHtml from 'sanitize-html';
 
 export const PlaylistsList = () => {
   const playlists = useSelector(playlistSelectors.getPlaylists);
   const selectedPlaylist = useSelector(playlistSelectors.getSelectedPlaylist);
+  const fetchStatus = useSelector(playlistSelectors.getFetchStatus);
   const dispatch = useDispatch();
 
   const onPlaylistSelect = useCallback(
@@ -23,15 +25,19 @@ export const PlaylistsList = () => {
 
   return (
     <VStack spacing={3} alignItems="flex-start">
-      <Select placeholder="Select playlist" onChange={onPlaylistSelect} value={selectedPlaylist?.id} maxW="300px">
-        {playlists.map((playlist) => (
-          <option value={playlist.id} key={playlist.id}>
-            {playlist.title}
-          </option>
-        ))}
-      </Select>
+      <Skeleton isLoaded={fetchStatus === 'success'}>
+        <Select placeholder="Select playlist" onChange={onPlaylistSelect} value={selectedPlaylist?.id} maxW="300px">
+          {playlists.map((playlist) => (
+            <option value={playlist.id} key={playlist.id}>
+              {playlist.title}
+            </option>
+          ))}
+        </Select>
+      </Skeleton>
 
-      <Text wordBreak="break-word">{selectedPlaylist?.description}</Text>
+      {selectedPlaylist?.description && (
+        <Text wordBreak="break-word" dangerouslySetInnerHTML={{ __html: sanitizeHtml(selectedPlaylist.description) }} />
+      )}
     </VStack>
   );
 };

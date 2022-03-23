@@ -1,12 +1,32 @@
 import type { NextPage } from 'next';
-import { Box, Button } from '@chakra-ui/react';
+import { Box, Flex, Button, Heading, VStack } from '@chakra-ui/react';
 import { Playlists } from '../modules/Playlists/Playlists';
 import { signIn, useSession } from 'next-auth/react';
+import { useCallback } from 'react';
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
 
-  return <Box py={4}>{session ? <Playlists /> : <Button onClick={() => signIn()}>Sign in</Button>}</Box>;
+  const onSignInClick = useCallback(() => {
+    signIn();
+  }, []);
+
+  return (
+    <Box py={4}>
+      {session ? (
+        <Playlists />
+      ) : (
+        <Flex h="90vh" justifyContent="center" alignItems="center">
+          <VStack>
+            <Heading>Sign in with spotify</Heading>
+            <Button size="lg" onClick={onSignInClick}>
+              Sign in
+            </Button>
+          </VStack>
+        </Flex>
+      )}
+    </Box>
+  );
 };
 
 export default Home;
