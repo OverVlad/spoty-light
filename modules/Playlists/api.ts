@@ -1,5 +1,7 @@
 import axios from 'axios';
 import {
+  AddTrackPlaylistRequest,
+  AddTrackPlaylistResponse,
   CreatePlaylistRequest,
   CreatePlaylistResponse,
   PlaylistsResponse,
@@ -11,3 +13,5 @@ export const fetchTracks = (params: SearchTracksRequest) => axios.get<SearchTrac
 export const fetchUserPlaylists = () => axios.get<PlaylistsResponse>('/api/playlists');
 export const createPlaylist = (body: CreatePlaylistRequest) =>
   axios.post<CreatePlaylistResponse>('/api/playlists', body);
+export const addTrackToPlaylist = (body: AddTrackPlaylistRequest) =>
+  axios.post<AddTrackPlaylistResponse>('/api/playlists/tracks', body);

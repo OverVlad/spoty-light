@@ -25,6 +25,7 @@ export default apiRouteHandler({
         id: t.id,
         preview_url: t.preview_url,
         artist: t.artists,
+        uri: t.uri,
         album: {
           name: t.album.name,
           release_date: t.album.release_date,

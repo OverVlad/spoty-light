@@ -4,6 +4,8 @@ import { useCallback } from 'react';
 import { addTrack, playlistSelectors, removeTrack } from '../../playlistsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { TrackSearchItem } from './TrackSearchItem';
+import { useMutation } from 'react-query';
+import { addTrackToPlaylist } from '../../api';
 
 type TrackSearchContainerProps = {
   tracks: Track[];
@@ -13,12 +15,26 @@ export const TrackSearchContainer = ({ tracks }: TrackSearchContainerProps) => {
   const toast = useToast();
   const dispatch = useDispatch();
   const { colorMode } = useColorMode();
+  const { mutate } = useMutation(addTrackToPlaylist, {
+    onMutate: ({ track, playlistId }) => {
+      dispatch(addTrack({ playlistId: playlistId, track: track }));
+    },
+    onError: (_, { playlistId, track }) => {
+      dispatch(removeTrack({ playlistId: playlistId, trackId: track.id }));
+      toast({
+        title: 'An error occurred. Try again.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
   const selectedPlaylist = useSelector(playlistSelectors.getSelectedPlaylist);
 
   const onTrackAdd = useCallback(
     (track: Track) => {
       if (selectedPlaylist) {
-        dispatch(addTrack({ playlistId: selectedPlaylist.id, track }));
+        mutate({ track, playlistId: selectedPlaylist.id });
       } else {
         toast({
           title: 'Choose playlist to add track',
@@ -27,7 +43,7 @@ export const TrackSearchContainer = ({ tracks }: TrackSearchContainerProps) => {
         });
       }
     },
-    [selectedPlaylist, dispatch, toast],
+    [mutate, selectedPlaylist, toast],
   );
 
   const onTrackDelete = useCallback(

@@ -54,7 +54,7 @@ export const playlistsSlice = createSlice({
       const playlist = state.items.find((playlist) => playlist.id === action.payload.playlistId);
 
       if (playlist) {
-        playlist.tracks.push(action.payload.track);
+        playlist.tracks.unshift(action.payload.track);
       }
     },
     removeTrack: (state, action: PayloadAction<{ trackId: string; playlistId: string }>) => {
@@ -72,7 +72,7 @@ export const playlistsSlice = createSlice({
     builder
       .addCase(loadPlaylistsSuccess, (state, action) => {
         state.fetchStatus = 'success';
-        state.items = [...state.items, ...action.payload];
+        state.items = [...action.payload, ...state.items];
       })
       .addCase(loadPlaylistsStart, (state) => {
         state.fetchStatus = 'loading';

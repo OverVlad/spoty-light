@@ -44,6 +44,7 @@ type SpotifyTrack = {
     images: { height: number; width: number; url: string }[];
   };
   artists: SpotifyArtist[];
+  uri: string;
 };
 
 type SpotifySearchResponse = {
@@ -145,6 +146,30 @@ export const createPlaylist = async ({
     `https://api.spotify.com/v1/users/${userId}/playlists`,
     {
       ...playlist,
+    },
+    {
+      headers: { Authorization: `Bearer ${access_token}` },
+    },
+  );
+
+  return data;
+};
+
+export const addItemsToPlaylist = async ({
+  refreshToken,
+  uris,
+  playlistId,
+}: {
+  refreshToken: string;
+  uris: string[];
+  playlistId: string;
+}) => {
+  const { access_token } = await getAccessToken(refreshToken);
+
+  const { data } = await axios.post<{ snapshot_id: string }>(
+    `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+    {
+      uris,
     },
     {
       headers: { Authorization: `Bearer ${access_token}` },

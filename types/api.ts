@@ -8,3 +8,6 @@ export type PlaylistsResponse = { playlists: Playlist[] };
 
 export type CreatePlaylistResponse = { playlist: Playlist };
 export type CreatePlaylistRequest = { playlist: { name: string; description?: string } };
+
+export type AddTrackPlaylistResponse = { track: Track; playlistId: string };
+export type AddTrackPlaylistRequest = { track: Track; playlistId: string };

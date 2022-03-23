@@ -19,6 +19,7 @@ type Artist = {
 export type Track = {
   id: string;
   name: string;
+  uri: string;
   artist: Artist[];
   album: {
     name: string;

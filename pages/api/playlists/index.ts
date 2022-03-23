@@ -1,8 +1,8 @@
-import { apiRouteHandler } from '../../utils/api-handler';
+import { apiRouteHandler } from '../../../utils/api-handler';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ApiErrorType, CreatePlaylistRequest, CreatePlaylistResponse, PlaylistsResponse } from '../../types/api';
+import { ApiErrorType, CreatePlaylistRequest, CreatePlaylistResponse, PlaylistsResponse } from '../../../types/api';
 import { getSession } from 'next-auth/react';
-import { createPlaylist, getCurrentUserPlaylists, getPlaylistsTracks } from '../../lib/spotify';
+import { createPlaylist, getCurrentUserPlaylists, getPlaylistsTracks } from '../../../lib/spotify';
 
 export default apiRouteHandler({
   get: async (req: NextApiRequest, res: NextApiResponse<PlaylistsResponse | ApiErrorType>) => {
@@ -28,6 +28,7 @@ export default apiRouteHandler({
           tracks: tracks.map(({ track }) => ({
             name: track.name,
             id: track.id,
+            uri: track.uri,
             artist: track.artists,
             album: {
               name: track.album.name,
